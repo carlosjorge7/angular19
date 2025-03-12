@@ -19,13 +19,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="
-              let product of (cartService.cart$ | async)?.products;
-              let i = index
-            "
-            class="border-b border-gray-200"
-          >
+          @for ( product of (cartService.cart$ | async)?.products;; track
+          $index) {
+          <tr class="border-b border-gray-200">
             <td class="py-3">{{ product.title | slice : 0 : 35 }}...</td>
             <td class="py-3">{{ product.quantity }}</td>
             <td class="custom-table-cell-price">
@@ -40,6 +36,7 @@
               </div>
             </td>
           </tr>
+          }
         </tbody>
         <tfoot>
           <tr>
