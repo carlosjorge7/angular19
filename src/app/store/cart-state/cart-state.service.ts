@@ -53,7 +53,7 @@ export class CartStateService {
       productsCount:
         this._cartCalculatorService.calculateItemsCount(updatedProducts),
     });
-    this._toastrService.success('Product added!!', 'DOMINI STORE');
+    this._toastrService.success('Product added!!', 'CEJO STORE');
   }
 
   removeFromCart(productId: number): void {

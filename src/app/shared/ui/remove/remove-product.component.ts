@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  output,
   Output,
 } from '@angular/core';
 import { RemoveSVGComponent } from './svg/remove-svg.component';
@@ -19,7 +20,7 @@ import { RemoveSVGComponent } from './svg/remove-svg.component';
   imports: [RemoveSVGComponent],
 })
 export class RemoveProductComponent {
-  @Output() clickRemoveProduct = new EventEmitter<void>();
+  clickRemoveProduct = output<void>();
 
   onRemoveProduct(): void {
     this.clickRemoveProduct.emit();
