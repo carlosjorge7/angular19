@@ -10,7 +10,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { provideToastr } from 'ngx-toastr';
 import { appRoutes } from './app.routes';
-import { spinnerInterceptor } from '@shared/interceptors/spinner-f.interceptor';
+import { spinnerInterceptor } from '@shared/interceptors/spinner.interceptor';
 
 registerLocaleData(localeEs, 'es');
 
