@@ -1,9 +1,10 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 
 import { Product } from '@features/products/product.interface';
 import { ToastrService } from 'ngx-toastr';
 
 import { CartCalculatorService } from 'src/app/store/cart-state/cart-calculator.service';
+import { CartStorageService } from './cart-storage.service';
 
 export interface CartStore {
   products: Product[];
@@ -19,6 +20,8 @@ export const initialCartState: CartStore = {
 
 @Injectable({ providedIn: 'root' })
 export class CartStateService {
+  private readonly cartStorageSvr = inject(CartStorageService);
+
   private readonly _cartCalculatorService = inject(CartCalculatorService);
   private readonly _toastrService = inject(ToastrService);
 
@@ -37,6 +40,15 @@ export class CartStateService {
     totalAmount: this.totalAmount(),
     productsCount: this.productCount(),
   }));
+
+  constructor() {
+    const savedStore = this.cartStorageSvr.loadState();
+    if (savedStore) {
+      this.products.set(savedStore.products);
+    }
+
+    effect(() => this.cartStorageSvr.saveState(this.cartStore()));
+  }
 
   addToCart(product: Product): void {
     const currentProducts = this.products();
