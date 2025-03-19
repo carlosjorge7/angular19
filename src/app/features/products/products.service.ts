@@ -1,16 +1,16 @@
-import { inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from '@envs/environment';
 
 import { Product } from '@features/products/product.interface';
-import { BehaviorSubject, map, Observable, tap } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { APIService } from './../../api/api.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProductsService {
-  private _allProducts$ = new BehaviorSubject<Product[]>([]);
-  private _filteredProducts$ = new BehaviorSubject<Product[]>([]);
+  private readonly allProducts = signal<Product[]>([]);
+  private readonly filteredProducts = signal<Product[]>([]);
 
-  readonly products$ = this._filteredProducts$.asObservable();
+  readonly products = computed(() => this.filteredProducts());
 
   private readonly _apiService = inject(APIService);
   private readonly _endPoint = `${environment.API_URL_FAKE_STORE}/products`;
@@ -19,27 +19,25 @@ export class ProductsService {
     this.getAllProducts()
       .pipe(
         tap((products: Product[]) => {
-          this._allProducts$.next(products);
-          this._filteredProducts$.next(products);
+          this.allProducts.set(products);
+          this.filteredProducts.set(products);
         })
       )
       .subscribe();
   }
 
-  getProductById(productId: number): Observable<Product | undefined> {
-    return this._allProducts$.pipe(
-      map((products) => products.find((product) => product.id === productId))
-    );
+  getProductById(productId: number): Product | undefined {
+    return this.allProducts().find((product) => product.id === productId);
   }
 
   filterProductsByCategory(category: string): void {
     if (category === 'all') {
-      this._filteredProducts$.next(this._allProducts$.value);
+      this.filteredProducts.set(this.allProducts());
     } else {
-      const filtered = this._allProducts$.value.filter(
+      const filtered = this.allProducts().filter(
         (product) => product.category === category
       );
-      this._filteredProducts$.next(filtered);
+      this.filteredProducts.set(filtered);
     }
   }
 
@@ -49,7 +47,7 @@ export class ProductsService {
       .pipe(map((products: Product[]) => this._addProperties(products)));
   }
 
-  getAllProducts(): Observable<Product[]> {
+  private getAllProducts(): Observable<Product[]> {
     return this._apiService
       .get<Product[]>(`${this._endPoint}?sort=desc`)
       .pipe(map((products: Product[]) => this._addProperties(products)));

@@ -4,7 +4,6 @@ import { CartStateService } from 'src/app/store/cart-state/cart-state.service';
 import { CardComponent } from '@features/products/card/card.component';
 import { Product } from '@features/products/product.interface';
 import { ProductsService } from '@features/products/products.service';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-products',
@@ -18,7 +17,7 @@ export default class ProductsComponent implements OnInit {
   private readonly _productsService = inject(ProductsService);
   private readonly _cartService = inject(CartStateService);
 
-  products$ = toSignal(this._productsService.products$);
+  products = this._productsService.products;
 
   ngOnInit() {
     this._route.queryParams.subscribe((params) => {
