@@ -1,6 +1,5 @@
 @tailwind components;
 
-
 @layer components {
   .heading {
     @apply text-center font-bold text-4xl max-w-lg mx-auto text-slate-default;
@@ -12,13 +11,5 @@
 
   .list-container {
     @apply flex flex-wrap gap-3 py-10 items-center justify-center;
-  }
-
-  .btn {
-    @apply bg-primary-default text-base font-medium px-6 capitalize py-2 rounded-md flex items-center gap-2 text-white ease-linear duration-300;
-
-    &-hover {
-      @apply hover:bg-primary-dark;
-    }
   }
 }
